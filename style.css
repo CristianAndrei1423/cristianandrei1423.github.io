@@ -164,6 +164,18 @@ section { padding-block: 2rem 3rem; }
 
 .repo { font-family: var(--mono); font-size: 0.9rem; font-weight: 600; }
 
+/* Small status pill next to a project title */
+.badge {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  vertical-align: middle;
+  color: #d29922;
+  border: 1px solid #d2992266;
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+  margin-left: 0.4rem;
+}
 
 /* ============================================================
    Visuals: terminal, code, stack diagram
