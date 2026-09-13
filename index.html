@@ -202,10 +202,11 @@
       <article class="project">
         <div class="visual screen" aria-label="A frame of Pong rendered by the emulator">
           <div class="term-bar"><span></span><span></span><span></span><em>./main Games/Pong.ch8</em></div>
-          <!-- Real 64x32 framebuffer: the emulator core ran Pong for 6000 cycles and this is its video[] -->
-          <svg viewBox="0 0 64 32" shape-rendering="crispEdges" role="img" aria-label="Pong: scores, two paddles and the ball">
+          <!-- Static frame, shown if JavaScript is off; pong.js swaps in the animated canvas -->
+          <svg id="pong-still" viewBox="0 0 64 32" shape-rendering="crispEdges" role="img" aria-label="Pong: scores, two paddles and the ball">
             <path d="M20 0h1v1h-1zM21 0h1v1h-1zM22 0h1v1h-1zM23 0h1v1h-1zM41 0h1v1h-1zM42 0h1v1h-1zM43 0h1v1h-1zM44 0h1v1h-1zM20 1h1v1h-1zM23 1h1v1h-1zM41 1h1v1h-1zM44 1h1v1h-1zM20 2h1v1h-1zM23 2h1v1h-1zM41 2h1v1h-1zM44 2h1v1h-1zM20 3h1v1h-1zM23 3h1v1h-1zM41 3h1v1h-1zM44 3h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM23 4h1v1h-1zM41 4h1v1h-1zM42 4h1v1h-1zM43 4h1v1h-1zM44 4h1v1h-1zM2 12h1v1h-1zM63 12h1v1h-1zM2 13h1v1h-1zM63 13h1v1h-1zM2 14h1v1h-1zM63 14h1v1h-1zM2 15h1v1h-1zM63 15h1v1h-1zM2 16h1v1h-1zM63 16h1v1h-1zM2 17h1v1h-1zM58 17h1v1h-1zM63 17h1v1h-1z"/>
           </svg>
+          <canvas id="pong" width="64" height="32" hidden aria-label="Pong running in the emulator"></canvas>
         </div>
 
         <div class="body">
@@ -258,6 +259,9 @@
   <footer class="wrap">
     <p>© 2026 Cristian Andrei · <a href="https://github.com/CristianAndrei1423/cristianandrei1423.github.io">source</a></p>
   </footer>
+
+  <script src="pong-data.js" defer></script>
+  <script src="pong.js" defer></script>
 
 </body>
 </html>

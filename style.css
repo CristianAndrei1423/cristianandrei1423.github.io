@@ -38,6 +38,7 @@
    Base
    ============================================================ */
 *, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }   /* so class rules can't un-hide elements */
 
 body {
   margin: 0;
@@ -390,5 +391,6 @@ footer p { margin: 0; }
 
 /* CHIP-8 screen: the SVG is 64x32 "pixels", scaled up without blurring */
 .screen { background: #010409; }
-.screen svg { display: block; width: 100%; height: auto; padding: 1rem; }
+.screen svg, .screen canvas { display: block; width: 100%; height: auto; padding: 1rem; }
+.screen canvas { image-rendering: pixelated; filter: drop-shadow(0 0 1.5px #3fb950aa); }
 .screen path { fill: #3fb950; filter: drop-shadow(0 0 0.4px #3fb950); }
