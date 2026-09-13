@@ -163,17 +163,6 @@ section { padding-block: 2rem 3rem; }
 
 .repo { font-family: var(--mono); font-size: 0.9rem; font-weight: 600; }
 
-.badge {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  font-weight: 400;
-  vertical-align: middle;
-  color: #d29922;
-  border: 1px solid #d2992266;
-  border-radius: 999px;
-  padding: 0.1rem 0.5rem;
-  margin-left: 0.4rem;
-}
 
 /* ============================================================
    Visuals: terminal, code, stack diagram
@@ -187,7 +176,7 @@ section { padding-block: 2rem 3rem; }
 }
 
 /* Terminal and code windows stay dark in both themes */
-.terminal, .code { background: #010409; color: #c9d1d9; }
+.terminal { background: #010409; color: #c9d1d9; }
 
 .term-bar {
   display: flex;
@@ -214,9 +203,6 @@ section { padding-block: 2rem 3rem; }
 .ok     { color: #3fb950; }
 .dir    { color: #58a6ff; font-weight: 600; }
 .exe    { color: #3fb950; font-weight: 600; }
-.kw     { color: #ff7b72; }
-.fn     { color: #d2a8ff; }
-.num    { color: #79c0ff; }
 
 .cursor { animation: blink 1s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
@@ -247,6 +233,106 @@ section { padding-block: 2rem 3rem; }
   margin-right: 0.4em;
   border: 1px solid var(--border);
   vertical-align: -0.05em;
+}
+
+/* ============================================================
+   Featured open-source card (GSoC)
+   ============================================================ */
+.tagline strong { color: var(--text); }
+
+.featured {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);   /* sets it apart from project cards */
+  border-radius: var(--radius);
+  padding: 2rem;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.5rem;
+}
+
+.featured h3 { font-size: 1.6rem; margin: 0 0 0.9rem; }
+.featured-head p { margin: 0 0 1.5rem; max-width: 75ch; }
+.featured-head strong { color: var(--text); }
+
+.stats {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.75rem;
+}
+.stats li {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+}
+.stats b {
+  display: block;
+  font-family: var(--mono);
+  font-size: 1.7rem;
+  color: var(--accent);
+  line-height: 1.1;
+}
+.stats span { color: var(--muted); font-size: 0.85rem; }
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+  margin-bottom: 1.75rem;
+}
+
+/* Version table inside a terminal window */
+.versions { background: #010409; color: #c9d1d9; }
+.versions table { width: 100%; border-collapse: collapse; }
+.versions th, .versions td {
+  text-align: left;
+  padding: 0.5rem 0.9rem;
+  border-bottom: 1px solid #21262d;
+  vertical-align: top;
+}
+.versions th { color: #8b949e; font-weight: 400; }
+.versions tr:last-child td { border-bottom: none; }
+.versions .old { color: #f85149; text-decoration: line-through; white-space: nowrap; }
+.versions .new { color: #3fb950; font-weight: 600; white-space: nowrap; }
+
+/* PR links grouped by area */
+.pr-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+.pr-groups h4 {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 400;
+  margin: 0 0 0.5rem;
+}
+.pr-groups a { display: block; font-size: 0.92rem; margin-bottom: 0.3rem; }
+
+.merged {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: #a371f7;
+  border: 1px solid #a371f766;
+  border-radius: 999px;
+  padding: 0 0.4rem;
+  margin-left: 0.25rem;
+  vertical-align: 0.1em;
 }
 
 /* ============================================================
@@ -292,9 +378,17 @@ footer p { margin: 0; }
   .hero { padding-block: 3rem 2rem; }
   .project { grid-template-columns: minmax(0, 1fr); padding: 1.25rem; gap: 1.25rem; }
   .project:nth-child(odd of .project) .visual { order: 0; }
+  .featured { padding: 1.25rem; }
+  .featured h3 { font-size: 1.3rem; }
+  .featured-grid { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
 }
 
 /* Respect users who turn off animations */
 @media (prefers-reduced-motion: reduce) {
   .cursor { animation: none; }
 }
+
+/* CHIP-8 screen: the SVG is 64x32 "pixels", scaled up without blurring */
+.screen { background: #010409; }
+.screen svg { display: block; width: 100%; height: auto; padding: 1rem; }
+.screen path { fill: #3fb950; filter: drop-shadow(0 0 0.4px #3fb950); }

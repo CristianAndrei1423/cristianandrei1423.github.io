@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cristian Andrei · Embedded & Systems</title>
-  <meta name="description" content="Software engineering student building low-level software: bare-metal ARM schedulers, KVM hypervisors and emulators.">
+  <meta name="description" content="Software engineering student building low-level software: GSoC 2026 contributor at Unikraft, bare-metal ARM schedulers, KVM hypervisors and emulators.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,8 @@
     <h1>Cristian Andrei</h1>
     <p class="tagline">
       Software engineering student writing software close to the hardware:
-      bare-metal ARM, x86 virtualization and emulators, written in C and assembly.
+      unikernels, bare-metal ARM, x86 virtualization and emulators.
+      <strong>Google Summer of Code 2026</strong> contributor at Unikraft.
     </p>
 
     <nav class="links" aria-label="Contact links">
@@ -32,6 +33,96 @@
   </header>
 
   <main class="wrap">
+
+    <section id="open-source" aria-labelledby="oss-title">
+      <h2 id="oss-title"><span class="hash">#</span> Open Source</h2>
+
+      <!-- ─────────────── GSoC 2026 @ Unikraft ─────────────── -->
+      <article class="featured">
+        <header class="featured-head">
+          <p class="eyebrow">Google Summer of Code 2026 · Unikraft</p>
+          <h3>Expanding the Unikraft Software Support Ecosystem</h3>
+          <p>
+            Unikraft turns an application into a tiny, single-purpose virtual machine called a <strong>unikernel</strong>.
+            It runs software through <em>library ports</em>: build recipes that fetch an upstream project, patch it so it
+            works without a normal OS, and compile it into the image. Some of the most important ports had fallen
+            years behind upstream, and the C++/LLVM ports no longer built with any recent compiler.
+            I brought them up to current releases and tested every port by <strong>building and booting</strong> it
+            on x86 and arm64.
+          </p>
+        </header>
+
+        <ul class="stats">
+          <li><b>10</b><span>library ports updated</span></li>
+          <li><b>7</b><span>LLVM major releases jumped</span></li>
+          <li><b>4</b><span>fixes to Unikraft core &amp; test runner</span></li>
+          <li><b>14/14</b><span>C++ runtime checks on every compiler × arch</span></li>
+        </ul>
+
+        <div class="featured-grid">
+          <div class="visual versions" aria-label="Library versions before and after">
+            <div class="term-bar"><span></span><span></span><span></span><em>make menuconfig</em></div>
+            <table>
+              <thead><tr><th>library</th><th>before</th><th>after</th></tr></thead>
+              <tbody>
+                <tr><td>musl</td><td class="old">1.2.3</td><td class="new">1.2.5</td></tr>
+                <tr><td>lwIP</td><td class="old">2.1.x</td><td class="new">2.2.1</td></tr>
+                <tr><td>lib-gcc</td><td class="old">7.3.0</td><td class="new">14.2.0</td></tr>
+                <tr><td>OpenSSL</td><td class="old">1.1.1c</td><td class="new">3.5.7</td></tr>
+                <tr><td>arm-intrinsics</td><td class="old">GCC 7</td><td class="new">GCC 14.2.0</td></tr>
+                <tr><td>compiler-rt, libunwind, libc++abi, libc++, intel-intrinsics</td><td class="old">old LLVM</td><td class="new">21.1.8</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="body">
+            <ul class="points">
+              <li>Each update is a <strong>menuconfig option</strong>, so the old and new versions can both be selected and nothing downstream breaks</li>
+              <li><strong>OpenSSL 3.5.7</strong> was a full rewrite of the port: I re-derived the build from OpenSSL's own output (1,000+ sources), replaced about 90 hand-written rules with its generator, and served a page from an nginx HTTPS server running inside a unikernel</li>
+              <li><strong>libc++ 21</strong> needed a new config format, conditional threading sources and 120 bundled LLVM-libc headers</li>
+              <li>Found and fixed <strong>bugs in the Unikraft core</strong> that blocked C++ apps on arm64 and Xen, including a Clang assembler failure in the arm64 floating-point save code</li>
+              <li>Wrote a runtime test app and <strong>CI workflows</strong> that trigger real boot tests in <code>catalog-core</code> when a PR is opened</li>
+            </ul>
+            <ul class="tags">
+              <li>C</li><li>C++</li><li>LLVM</li><li>GCC / Clang</li><li>Make / Kconfig</li><li>QEMU</li><li>Firecracker</li><li>Xen</li><li>GitHub Actions</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pr-groups">
+          <div>
+            <h4>Core libraries</h4>
+            <a href="https://github.com/unikraft/lib-musl/pull/98">musl #98</a>
+            <a href="https://github.com/unikraft/lib-lwip/pull/81">lwIP #81</a>
+            <a href="https://github.com/unikraft/lib-gcc/pull/5">lib-gcc #5</a>
+            <a href="https://github.com/unikraft/lib-openssl/pull/12">OpenSSL #12</a>
+            <a href="https://github.com/unikraft/lib-arm-intrinsics/pull/3">arm-intrinsics #3</a>
+          </div>
+          <div>
+            <h4>LLVM toolchain</h4>
+            <a href="https://github.com/unikraft/lib-compiler-rt/pull/22">compiler-rt #22</a>
+            <a href="https://github.com/unikraft/lib-libunwind/pull/13">libunwind #13</a>
+            <a href="https://github.com/unikraft/lib-libcxxabi/pull/8">libc++abi #8</a>
+            <a href="https://github.com/unikraft/lib-libcxx/pull/38">libc++ #38</a>
+            <a href="https://github.com/unikraft/lib-intel-intrinsics/pull/6">intel-intrinsics #6</a>
+          </div>
+          <div>
+            <h4>Core fixes</h4>
+            <a href="https://github.com/unikraft/unikraft/pull/1879">Xen C++ build #1879 <span class="merged">merged</span></a>
+            <a href="https://github.com/unikraft/catalog-core/pull/108">QEMU test hang #108 <span class="merged">merged</span></a>
+            <a href="https://github.com/unikraft/unikraft/pull/1876">arm64 C++ #1876</a>
+            <a href="https://github.com/unikraft/unikraft/pull/1875">arm64 Clang #1875</a>
+          </div>
+          <div>
+            <h4>Writing</h4>
+            <a href="https://github.com/unikraft/docs/pull/568">Blog post 1</a>
+            <a href="https://github.com/unikraft/docs/pull/577">Blog post 2</a>
+          </div>
+        </div>
+
+        <a class="repo" href="https://github.com/unikraft/gsoc/blob/staging/gsoc-2026/work-product/Cristian-Andrei-Unikraft-Library-Updates.md">Read the full GSoC report →</a>
+      </article>
+    </section>
 
     <section id="projects" aria-labelledby="projects-title">
       <h2 id="projects-title"><span class="hash">#</span> Projects</h2>
@@ -109,29 +200,28 @@
 
       <!-- ─────────────── CHIP-8 ─────────────── -->
       <article class="project">
-        <div class="visual code" aria-label="Fetch step of the CHIP-8 emulator">
-          <div class="term-bar"><span></span><span></span><span></span><em>chip8.c (condensed)</em></div>
-<pre><span class="kw">void</span> <span class="fn">fetch_chip8</span>(Chip8* chip8) {
-    <span class="dim">// opcodes are 2 bytes, big-endian</span>
-    chip8->opcode  = chip8->memory[chip8->pc] << <span class="num">8</span>;
-    chip8->opcode |= chip8->memory[chip8->pc + <span class="num">1</span>];
-    chip8->pc += <span class="num">2</span>;
-}</pre>
+        <div class="visual screen" aria-label="A frame of Pong rendered by the emulator">
+          <div class="term-bar"><span></span><span></span><span></span><em>./main Games/Pong.ch8</em></div>
+          <!-- Real 64x32 framebuffer: the emulator core ran Pong for 6000 cycles and this is its video[] -->
+          <svg viewBox="0 0 64 32" shape-rendering="crispEdges" role="img" aria-label="Pong: scores, two paddles and the ball">
+            <path d="M20 0h1v1h-1zM21 0h1v1h-1zM22 0h1v1h-1zM23 0h1v1h-1zM41 0h1v1h-1zM42 0h1v1h-1zM43 0h1v1h-1zM44 0h1v1h-1zM20 1h1v1h-1zM23 1h1v1h-1zM41 1h1v1h-1zM44 1h1v1h-1zM20 2h1v1h-1zM23 2h1v1h-1zM41 2h1v1h-1zM44 2h1v1h-1zM20 3h1v1h-1zM23 3h1v1h-1zM41 3h1v1h-1zM44 3h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM23 4h1v1h-1zM41 4h1v1h-1zM42 4h1v1h-1zM43 4h1v1h-1zM44 4h1v1h-1zM2 12h1v1h-1zM63 12h1v1h-1zM2 13h1v1h-1zM63 13h1v1h-1zM2 14h1v1h-1zM63 14h1v1h-1zM2 15h1v1h-1zM63 15h1v1h-1zM2 16h1v1h-1zM63 16h1v1h-1zM2 17h1v1h-1zM58 17h1v1h-1zM63 17h1v1h-1z"/>
+          </svg>
         </div>
 
         <div class="body">
-          <h3>CHIP-8 Emulator <span class="badge">in progress</span></h3>
+          <h3>CHIP-8 Emulator</h3>
           <p>
-            An interpreter for the CHIP-8 virtual machine. It models the memory map, 16 registers,
-            the call stack and the timers, and runs a fetch–decode–execute loop.
+            An emulator for the CHIP-8 virtual machine from the 1970s. It runs original ROMs such as Pong,
+            with graphics, sound and keyboard input through <strong>SDL2</strong>.
           </p>
           <ul class="points">
-            <li>Loads ROMs into the non-reserved part of memory starting at <code>0x200</code></li>
-            <li>Decodes opcodes by nibble (<code>X</code>, <code>Y</code>, <code>N</code>, <code>NN</code>, <code>NNN</code>) and already handles jumps, calls, conditional skips and register operations</li>
-            <li>Next steps: drawing sprites, keypad input and the display frontend</li>
+            <li>Implements the <strong>full instruction set</strong>, validated against Timendus' CHIP-8 test suite</li>
+            <li>Handles the tricky <code>VF</code> flag edge cases, including when <code>VF</code> itself is an operand</li>
+            <li>Sprite clipping and wrapping match the original COSMAC VIP behaviour</li>
+            <li>The CPU (~700 Hz) and the 60 Hz timers/rendering run at separate rates, and the beep is a 440 Hz square wave generated in an audio callback</li>
           </ul>
           <ul class="tags">
-            <li>C</li><li>Emulation</li><li>CPU architecture</li>
+            <li>C</li><li>SDL2</li><li>Emulation</li><li>CPU architecture</li>
           </ul>
           <a class="repo" href="https://github.com/CristianAndrei1423/Chip-8-Emulator">View source →</a>
         </div>
@@ -150,15 +240,15 @@
       <div class="skills">
         <div>
           <h3>Languages</h3>
-          <p>C · ARM Thumb &amp; x86 assembly</p>
+          <p>C · C++ · ARM Thumb &amp; x86 assembly</p>
         </div>
         <div>
           <h3>Systems</h3>
-          <p>KVM · Linux boot · Cortex-M exceptions · UART · linker scripts</p>
+          <p>Unikernels · KVM · Linux boot · Cortex-M exceptions · UART · linker scripts</p>
         </div>
         <div>
           <h3>Tools</h3>
-          <p>GCC · Make · GDB · st-util · Git · Linux</p>
+          <p>GCC · Clang/LLVM · Make · Kconfig · GDB · QEMU · Firecracker · Xen · GitHub Actions · Git</p>
         </div>
       </div>
     </section>
