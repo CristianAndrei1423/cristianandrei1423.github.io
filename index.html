@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cristian Andrei · Embedded & Systems</title>
+  <meta name="description" content="Software engineering student building low-level software: bare-metal ARM schedulers, KVM hypervisors and emulators.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="hero wrap">
+    <p class="prompt">~$ whoami</p>
+    <h1>Cristian Andrei</h1>
+    <p class="tagline">
+      Software engineering student writing software close to the hardware:
+      bare-metal ARM, x86 virtualization and emulators, written in C and assembly.
+    </p>
+
+    <nav class="links" aria-label="Contact links">
+      <a href="https://github.com/CristianAndrei1423">GitHub</a>
+      <!-- TODO: uncomment and fill in
+      <a href="https://www.linkedin.com/in/YOUR-HANDLE">LinkedIn</a>
+      <a href="mailto:YOUR-EMAIL">Email</a>
+      <a href="cv.pdf">CV (PDF)</a>
+      -->
+    </nav>
+  </header>
+
+  <main class="wrap">
+
+    <section id="projects" aria-labelledby="projects-title">
+      <h2 id="projects-title"><span class="hash">#</span> Projects</h2>
+
+      <!-- ─────────────── SimpleHypervisor ─────────────── -->
+      <article class="project">
+        <div class="visual terminal" aria-label="Real console output of the hypervisor booting Linux">
+          <div class="term-bar"><span></span><span></span><span></span><em>./main</em></div>
+<pre>[    0.000000] Linux version 7.0.0-28-generic
+[    0.000000] Command line: earlyprintk=serial,ttyS0 console=ttyS0
+[    0.221343] Memory: 166120K/523900K available
+<span class="dim">...</span>
+[    1.129177] x86/mm: Checked W+X mappings: passed
+[    1.130397] Run /init as init process
+=== interactive init: starting shell ===
+<span class="ok">~ #</span> ls /
+<span class="dir">bin   dev   etc</span>   <span class="exe">init</span>  <span class="dir">proc  root  sbin  sys   usr</span>
+<span class="ok">~ #</span> <span class="cursor">_</span></pre>
+        </div>
+
+        <div class="body">
+          <h3>SimpleHypervisor</h3>
+          <p>
+            A type-2 hypervisor built directly on the Linux <strong>KVM API</strong>, with no QEMU involved.
+            It boots an unmodified Linux kernel to an interactive BusyBox shell in about one second.
+          </p>
+          <ul class="points">
+            <li>Implements the x86 Linux boot protocol by hand: loads the bzImage and initramfs, fills in <code>boot_params</code>, the e820 memory map and the kernel command line</li>
+            <li>Builds a GDT and puts the vCPU straight into 32-bit protected mode</li>
+            <li>Emulates a <strong>16550 UART</strong> with interrupt-driven I/O on IRQ 4, with a separate input thread so the guest console is interactive</li>
+          </ul>
+          <ul class="tags">
+            <li>C</li><li>KVM</li><li>x86</li><li>Linux boot protocol</li><li>pthreads</li>
+          </ul>
+          <a class="repo" href="https://github.com/CristianAndrei1423/SimpleHypervisor">View source →</a>
+        </div>
+      </article>
+
+      <!-- ─────────────── Preemptive scheduler ─────────────── -->
+      <article class="project">
+        <div class="visual stack" aria-label="Diagram of a task stack frame during a context switch">
+          <p class="stack-title">task stack @ PSP</p>
+          <ol>
+            <li class="hw">xPSR <span>thumb bit 24</span></li>
+            <li class="hw">PC</li>
+            <li class="hw">LR</li>
+            <li class="hw">R12</li>
+            <li class="hw">R3 – R0</li>
+            <li class="sw">R11 – R4 <span>saved in PendSV</span></li>
+          </ol>
+          <p class="legend">
+            <span class="key hw"></span> stacked by the CPU on exception entry
+            <br><span class="key sw"></span> stacked by my assembly handler
+          </p>
+        </div>
+
+        <div class="body">
+          <h3>Bare-metal Preemptive Scheduler</h3>
+          <p>
+            The core of an RTOS for the <strong>ARM Cortex-M4</strong>, running on an STM32 NUCLEO-F401RE board.
+            It uses no HAL, no vendor startup code and no libraries.
+          </p>
+          <ul class="points">
+            <li>Hand-written linker script, interrupt vector table and reset handler that sets up <code>.data</code> and <code>.bss</code></li>
+            <li>SysTick triggers PendSV, which performs a round-robin context switch in assembly</li>
+            <li>Tasks run on the process stack (PSP) using <code>EXC_RETURN</code>, and each new task starts from a hand-built fake stack frame</li>
+            <li>Debugged on the board with GDB and <code>st-util</code></li>
+          </ul>
+          <ul class="tags">
+            <li>C</li><li>ARM Thumb assembly</li><li>Cortex-M4</li><li>Linker scripts</li><li>GDB</li>
+          </ul>
+          <a class="repo" href="https://github.com/CristianAndrei1423/Bare-metal-preemptive-scheduler">View source →</a>
+        </div>
+      </article>
+
+      <!-- ─────────────── CHIP-8 ─────────────── -->
+      <article class="project">
+        <div class="visual code" aria-label="Fetch step of the CHIP-8 emulator">
+          <div class="term-bar"><span></span><span></span><span></span><em>chip8.c (condensed)</em></div>
+<pre><span class="kw">void</span> <span class="fn">fetch_chip8</span>(Chip8* chip8) {
+    <span class="dim">// opcodes are 2 bytes, big-endian</span>
+    chip8->opcode  = chip8->memory[chip8->pc] << <span class="num">8</span>;
+    chip8->opcode |= chip8->memory[chip8->pc + <span class="num">1</span>];
+    chip8->pc += <span class="num">2</span>;
+}</pre>
+        </div>
+
+        <div class="body">
+          <h3>CHIP-8 Emulator <span class="badge">in progress</span></h3>
+          <p>
+            An interpreter for the CHIP-8 virtual machine. It models the memory map, 16 registers,
+            the call stack and the timers, and runs a fetch–decode–execute loop.
+          </p>
+          <ul class="points">
+            <li>Loads ROMs into the non-reserved part of memory starting at <code>0x200</code></li>
+            <li>Decodes opcodes by nibble (<code>X</code>, <code>Y</code>, <code>N</code>, <code>NN</code>, <code>NNN</code>) and already handles jumps, calls, conditional skips and register operations</li>
+            <li>Next steps: drawing sprites, keypad input and the display frontend</li>
+          </ul>
+          <ul class="tags">
+            <li>C</li><li>Emulation</li><li>CPU architecture</li>
+          </ul>
+          <a class="repo" href="https://github.com/CristianAndrei1423/Chip-8-Emulator">View source →</a>
+        </div>
+      </article>
+    </section>
+
+    <section id="about" aria-labelledby="about-title">
+      <h2 id="about-title"><span class="hash">#</span> About</h2>
+      <p>
+        I'm a third-year software engineering student. I like finding out what actually happens
+        underneath the abstractions: what the CPU does on an exception, how a kernel gets
+        loaded, how a virtual machine sees its hardware. I learn by building these pieces myself
+        and reading the reference manuals and datasheets along the way.
+      </p>
+
+      <div class="skills">
+        <div>
+          <h3>Languages</h3>
+          <p>C · ARM Thumb &amp; x86 assembly</p>
+        </div>
+        <div>
+          <h3>Systems</h3>
+          <p>KVM · Linux boot · Cortex-M exceptions · UART · linker scripts</p>
+        </div>
+        <div>
+          <h3>Tools</h3>
+          <p>GCC · Make · GDB · st-util · Git · Linux</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="wrap">
+    <p>© 2026 Cristian Andrei · <a href="https://github.com/CristianAndrei1423/cristianandrei1423.github.io">source</a></p>
+  </footer>
+
+</body>
+</html>

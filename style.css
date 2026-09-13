@@ -1,0 +1,300 @@
+/* ============================================================
+   Design tokens: change the whole look from here.
+   Dark theme by default, light theme when the OS asks for it.
+   ============================================================ */
+:root {
+  --bg:        #0d1117;
+  --surface:   #161b22;
+  --border:    #30363d;
+  --text:      #e6edf3;
+  --muted:     #8b949e;
+  --accent:    #3fb950;   /* terminal green */
+  --accent-2:  #58a6ff;   /* link blue */
+  --hw:        #1f6feb33; /* CPU-saved registers */
+  --sw:        #3fb95033; /* software-saved registers */
+
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --radius: 10px;
+  --max-width: 980px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg:       #f6f8fa;
+    --surface:  #ffffff;
+    --border:   #d0d7de;
+    --text:     #1f2328;
+    --muted:    #57606a;
+    --accent:   #1a7f37;
+    --accent-2: #0969da;
+    --hw:       #0969da22;
+    --sw:       #1a7f3722;
+  }
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+/* One centered column with side gutters for every section */
+.wrap {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+a { color: var(--accent-2); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.05em 0.35em;
+}
+
+h1, h2, h3 { line-height: 1.2; }
+
+h2 {
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  margin: 0 0 1.5rem;
+}
+.hash { color: var(--accent); }
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.hero { padding-block: 5rem 3.5rem; }
+
+.prompt {
+  font-family: var(--mono);
+  color: var(--accent);
+  margin: 0 0 0.5rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.4rem, 7vw, 3.8rem);  /* scales with screen width */
+  margin: 0 0 1rem;
+  letter-spacing: -0.02em;
+}
+
+.tagline {
+  max-width: 60ch;           /* keep lines readable */
+  color: var(--muted);
+  font-size: 1.15rem;
+  margin: 0 0 1.75rem;
+}
+
+.links { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+.links a {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text);
+  transition: border-color 0.15s, color 0.15s;
+}
+.links a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ============================================================
+   Projects
+   ============================================================ */
+section { padding-block: 2rem 3rem; }
+
+.project {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  margin-bottom: 1.75rem;
+}
+
+/* Alternate the visual left/right on wide screens */
+.project:nth-child(odd of .project) .visual { order: 2; }
+
+.project h3 { font-size: 1.35rem; margin: 0 0 0.75rem; }
+.project p  { margin: 0 0 1rem; }
+
+.points { padding-left: 1.1rem; margin: 0 0 1.25rem; color: var(--muted); }
+.points li { margin-bottom: 0.4rem; }
+.points strong, .project p strong { color: var(--text); }
+
+.tags {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.tags li {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.15rem 0.65rem;
+}
+
+.repo { font-family: var(--mono); font-size: 0.9rem; font-weight: 600; }
+
+.badge {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  vertical-align: middle;
+  color: #d29922;
+  border: 1px solid #d2992266;
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+  margin-left: 0.4rem;
+}
+
+/* ============================================================
+   Visuals: terminal, code, stack diagram
+   ============================================================ */
+.visual {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
+/* Terminal and code windows stay dark in both themes */
+.terminal, .code { background: #010409; color: #c9d1d9; }
+
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.8rem;
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
+}
+.term-bar span { width: 11px; height: 11px; border-radius: 50%; background: #484f58; }
+.term-bar span:nth-child(1) { background: #ff5f56; }
+.term-bar span:nth-child(2) { background: #ffbd2e; }
+.term-bar span:nth-child(3) { background: #27c93f; }
+.term-bar em { margin-left: auto; font-style: normal; color: #8b949e; }
+
+.visual pre {
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;     /* long lines scroll inside the box, not the page */
+  line-height: 1.55;
+}
+
+.dim    { color: #6e7681; }
+.ok     { color: #3fb950; }
+.dir    { color: #58a6ff; font-weight: 600; }
+.exe    { color: #3fb950; font-weight: 600; }
+.kw     { color: #ff7b72; }
+.fn     { color: #d2a8ff; }
+.num    { color: #79c0ff; }
+
+.cursor { animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Stack-frame diagram */
+.stack { padding: 1.25rem; background: var(--bg); }
+.stack-title { margin: 0 0 0.6rem; color: var(--muted); }
+.stack ol { list-style: none; margin: 0; padding: 0; }
+.stack li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--border);
+  border-top: none;
+  font-size: 0.85rem;
+}
+.stack li:first-child { border-top: 1px solid var(--border); border-radius: 6px 6px 0 0; }
+.stack li:last-child  { border-radius: 0 0 6px 6px; }
+.stack li span { color: var(--muted); font-size: 0.75rem; }
+.stack .hw { background: var(--hw); }
+.stack .sw { background: var(--sw); }
+
+.legend { margin: 0.9rem 0 0; color: var(--muted); font-size: 0.75rem; line-height: 1.9; }
+.key {
+  display: inline-block;
+  width: 0.8em; height: 0.8em;
+  margin-right: 0.4em;
+  border: 1px solid var(--border);
+  vertical-align: -0.05em;
+}
+
+/* ============================================================
+   About
+   ============================================================ */
+#about > p { max-width: 70ch; color: var(--muted); margin: 0 0 2rem; }
+
+.skills {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.skills > div {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+}
+.skills h3 {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin: 0 0 0.4rem;
+}
+.skills p { margin: 0; font-size: 0.95rem; }
+
+/* ============================================================
+   Footer
+   ============================================================ */
+footer {
+  border-top: 1px solid var(--border);
+  padding-block: 2rem 3rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-family: var(--mono);
+}
+footer p { margin: 0; }
+
+/* ============================================================
+   Mobile: stack each card into one column
+   ============================================================ */
+@media (max-width: 760px) {
+  .hero { padding-block: 3rem 2rem; }
+  .project { grid-template-columns: minmax(0, 1fr); padding: 1.25rem; gap: 1.25rem; }
+  .project:nth-child(odd of .project) .visual { order: 0; }
+}
+
+/* Respect users who turn off animations */
+@media (prefers-reduced-motion: reduce) {
+  .cursor { animation: none; }
+}
